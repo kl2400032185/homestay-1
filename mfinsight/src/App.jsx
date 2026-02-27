@@ -1,4 +1,5 @@
 import { useState } from "react";
+import LoginPage from "./pages/LoginPage.jsx";
 import Sidebar from "./components/Sidebar.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import HomestaysPage from "./pages/HomestaysPage.jsx";
@@ -27,11 +28,19 @@ const pageMap = {
 };
 
 export default function App() {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
   const [activePage, setActivePage] = useState("home");
+
+  if (!loggedIn) {
+    return <LoginPage onLogin={(email) => { setUserEmail(email); setLoggedIn(true); }} />;
+  }
+
   const PageComponent = pageMap[activePage] || HomePage;
+
   return (
     <div style={{ display: "flex", minHeight: "100vh", fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif", background: "#f8fafc" }}>
-      <Sidebar activePage={activePage} setActivePage={setActivePage} />
+      <Sidebar activePage={activePage} setActivePage={setActivePage} userEmail={userEmail} onLogout={() => setLoggedIn(false)} />
       <main style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, overflowX: "hidden" }}>
         <PageComponent setActivePage={setActivePage} />
       </main>
